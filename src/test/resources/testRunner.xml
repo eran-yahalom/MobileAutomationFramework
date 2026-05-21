@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+
+<suite name="e commerce Test Suite"
+       parallel="methods"
+       thread-count="1">
+    <listeners>
+        <listener class-name="automation.listeners.TestNGListener"/>
+        <listener class-name="automation.listeners.ProgressListener"/>
+        <listener class-name="automation.utils.RetryListener"/>
+    </listeners>
+
+    <test name="e commerce tests">
+        <classes>
+            <class name="automation.launchers.GeneralLauncher"/>
+        </classes>
+    </test>
+</suite>

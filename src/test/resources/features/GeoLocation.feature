@@ -1,0 +1,29 @@
+@geoLocation
+Feature: GeoLocation
+
+  Background:
+    Given user is successfully logged in
+    And User clicks on menu icon
+    And The user navigates to the "Geo Location" screen
+    And user closes the geo location pop up
+
+  Scenario: Navigate to this link and verify that we get 404 error
+    When user clicks on this link link
+    And user clicks on this link link
+    Then user should see the geo location web page
+
+  Scenario: Stop observing button should stop the location updates
+    And user clicks on stop observing button
+    When user saves the longitude and latitude data as "start"
+    And user waits for 3 seconds
+    Then user should verify that the longitude and latitude data is not updated after stopping the observation
+
+  Scenario: Start observing button should Start the location updates
+    And user waits for 3 seconds
+    When user clicks on stop observing button
+    When user saves the longitude and latitude data as "start"
+    And user clicks on start observing button
+    And user waits for 7 seconds
+    Then user should verify that the longitude and latitude data is updated after starting the observation
+
+
