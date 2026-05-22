@@ -1,10 +1,9 @@
 package automation.di;
 
-import automation.utils.DriverManager;
+import automation.drivers.DriverManager;
 import com.google.inject.Provider;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
-
 import java.net.URL;
 import java.time.Duration;
 
@@ -15,26 +14,39 @@ public class AndroidDriverProvider implements Provider<AndroidDriver> {
 
     @Override
     public AndroidDriver get() {
-        System.out.println("DEBUG: Initializing AndroidDriver via Provider...");
-
-        UiAutomator2Options options = new UiAutomator2Options()
-                .setPlatformName("Android")
-                .setDeviceName("emulator-5554")
-                .setAutomationName("UiAutomator2")
-                .setApp(APP_PATH)
-                .setAppPackage("com.saucelabs.mydemoapp.rn")
-                .setAppActivity(".MainActivity")
-                .setNoReset(false)
-                .setAutoGrantPermissions(true);
+        // הגנה: אם הטרד הזה כבר מחזיק דרייבר פעיל, נשתמש בו ולא נפתח סשן חדש
+        if (DriverManager.getDriver() != null) {
+            return DriverManager.getDriver();
+        }
 
         try {
+            String udid = DriverManager.getUdid();
+            String systemPort = DriverManager.getSystemPort();
+
+            // חסימת מצב שבו הפרמטרים לא הגיעו מה-XML בזמן
+            if (udid == null || systemPort == null) {
+                throw new RuntimeException("TestNG XML parameters are missing for this thread!");
+            }
+
+            UiAutomator2Options options = new UiAutomator2Options()
+                    .setPlatformName("Android")
+                    .setAutomationName("UiAutomator2")
+                    .setUdid(udid)
+                    .setSystemPort(Integer.parseInt(systemPort))
+                    .setApp(APP_PATH)
+                    .setAppPackage("com.saucelabs.mydemoapp.rn")
+                    .setAppActivity(".MainActivity")
+                    .setAutoGrantPermissions(true)
+                    .setNoReset(false)
+                    .setFullReset(true); // מבטיח דף חלק לחלוטין בכל טסט מחדש
+
             AndroidDriver driver = new AndroidDriver(new URL(APPIUM_URL), options);
             driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 
-            // חשוב: עדכון ה-DriverManager כדי ששאר ה-framework יכיר את הדרייבר
+            // רישום הדרייבר בגלובל של הטרד
             DriverManager.setDriver(driver);
-
             return driver;
+
         } catch (Exception e) {
             throw new RuntimeException("CRITICAL: Failed to initialize AndroidDriver", e);
         }

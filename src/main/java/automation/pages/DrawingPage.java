@@ -8,6 +8,10 @@ import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
 
 public class DrawingPage extends BasePage {
 
@@ -46,7 +50,24 @@ public class DrawingPage extends BasePage {
     }
 
     public boolean saveDrawingPopUp() {
-        AndroidSystemHandler.closeAlert(driver);
-        return true;
+        try {
+            // המתנה של 3 שניות בלבד לפופ-אפ הדינמי
+            WebDriverWait shortWait = new WebDriverWait(driver, Duration.ofSeconds(3));
+
+            // לוקייטורים נפוצים לפופ-אפ של אנדרואיד (אישור שמירת קובץ/מדיה או כפתור אישור כללי)
+            By androidOkButton = By.id("android:id/button1"); // כפתור אישור/OK סטנדרטי
+
+            shortWait.until(ExpectedConditions.elementToBeClickable(androidOkButton)).click();
+            return true;
+        } catch (Exception e) {
+            // Fallback למנגנון המקורי שלך אם הלוקייטור הישיר לא עבד
+            try {
+                AndroidSystemHandler.closeAlert(driver);
+                return true;
+            } catch (Exception ex) {
+                System.out.println("[WARN] Could not bypass drawing pop-up using standard handlers. Proceeding anyway.");
+                return false;
+            }
+        }
     }
 }
