@@ -1,0 +1,27 @@
+[
+  {
+    "fullName": "James Dean",
+    "address1": "ben hoz st 11",
+    "city": "tel-aviv",
+    "zipCode": 123456,
+    "country": "Israel",
+    "cardNumber": 4111111111111111,
+    "cardExpiry": "03/30",
+    "cardCVV": 234
+  },
+  {
+    "query": "tcp",
+    "maxPrice": 1000.0,
+    "limit": 2
+  },
+  {
+    "query": "Health",
+    "maxPrice": 30.0,
+    "limit": 5
+  },
+  {
+    "query": "Jewelry",
+    "maxPrice": 500.0,
+    "limit": 1
+  }
+]

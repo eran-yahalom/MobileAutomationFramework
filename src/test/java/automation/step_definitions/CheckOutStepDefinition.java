@@ -5,12 +5,18 @@ import automation.pages.CheckOutCompletePage;
 import automation.pages.CheckoutPage;
 import automation.pages.PaymentMethodPage;
 import automation.pages.ReviewYourOrderPage;
+import automation.utils.JsonDataLoaderUtils;
+import automation.utils.ScenarioContext;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import io.cucumber.guice.ScenarioScoped;
 import io.cucumber.java.en.And;
+import io.cucumber.java.en.When;
+import models.testdata.UserDetailsData;
 import net.datafaker.Faker;
 import org.testng.Assert;
+
+import java.util.List;
 
 @ScenarioScoped
 public class CheckOutStepDefinition {
