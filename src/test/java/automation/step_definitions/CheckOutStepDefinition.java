@@ -77,4 +77,97 @@ public class CheckOutStepDefinition {
         Assert.assertTrue(checkOutCompletePageProvider.get().clickContinueShoppingButton(),
                 "Failed to click on continue shopping button");
     }
+
+    @When("user fills in checkout information using data from {string} at index {int}")
+    public void userFillsInCheckOutInformation(String jsonFile, int index) {
+
+        List<UserDetailsData> UserData = JsonDataLoaderUtils.getSearchData(jsonFile);
+        UserDetailsData scenario = UserData.get(index);
+        Assert.assertNotNull(UserData, "Test scenarios should not be null");
+
+        String fullName = scenario.getFullName();
+        String address = scenario.getAddress1();
+        String city = scenario.getCity();
+        String country = scenario.getCountry();
+
+        String expiryDate = scenario.getCardExpiry();
+        String zipCode = scenario.getZipCode();
+        String cardNumber = scenario.getCardNumber();
+        String cvv = scenario.getCardCVV();
+
+        ScenarioContext.save("fullName", fullName);
+        ScenarioContext.save("address", address);
+        ScenarioContext.save("city", city);
+        ScenarioContext.save("country", country);
+        ScenarioContext.save("expiryDate", expiryDate);
+        ScenarioContext.save("zipCode", zipCode);
+        ScenarioContext.save("cardNumber", cardNumber);
+        ScenarioContext.save("cvv", cvv);
+
+
+        Assert.assertTrue(checkoutPageProvider.get().enterFullName(fullName),
+                "Failed to enter first name");
+        Assert.assertTrue(checkoutPageProvider.get().enterAddressLine1(address),
+                "Failed to enter address");
+        Assert.assertTrue(checkoutPageProvider.get().enterCity(city),
+                "Failed to enter city");
+        Assert.assertTrue(checkoutPageProvider.get().enterZipCode(zipCode),
+                "Failed to enter zip code");
+        Assert.assertTrue(checkoutPageProvider.get().enterCountry(country),
+                "Failed to enter country");
+        Assert.assertTrue(checkoutPageProvider.get().clickToPaymentButton(),
+                "Failed to click on payment button");
+    }
+
+    @And("user fills payment method using data from {string} at index {int}")
+    public void userSelectsPaymentMethodAndConfirmsTheOrderUsingDataFromAtIndex(String jsonFile, int index) {
+        String fullName = ScenarioContext.get("fullName", String.class);
+        String cardNumber = ScenarioContext.get("cardNumber", String.class);
+        String expiryDate = ScenarioContext.get("expiryDate", String.class);
+        String cvv = ScenarioContext.get("cvv", String.class);
+
+        Assert.assertTrue(paymentMethodPageProvider.get().enterPaymentMethodFullName(fullName),
+                "Failed to enter card holder name");
+        Assert.assertTrue(paymentMethodPageProvider.get().enterPaymentMethodCardNumber(cardNumber),
+                "Failed to enter card number");
+        Assert.assertTrue(paymentMethodPageProvider.get().enterPaymentMethodExpirationDate(expiryDate),
+                "Failed to enter card expiration date");
+        Assert.assertTrue(paymentMethodPageProvider.get().enterPaymentMethodSecurityCode(cvv),
+                "Failed to enter card CVV");
+    }
+
+    @And("user clicks on the shipping same as billing checkbox")
+    public void userClicksOnTheShippingSameAsBillingCheckbox() {
+        Assert.assertTrue(paymentMethodPageProvider.get().clickShippingAsBillingAddressCheckBox(),
+                "Failed to click on shipping same as billing checkbox");
+    }
+
+    @And("user clicks on confirm order button")
+    public void userClicksOnConfirmOrderButton() {
+        Assert.assertTrue(paymentMethodPageProvider.get().clickReviewOrderButton(),
+                "Failed to click on confirm order button");
+    }
+
+    @And("user fills the billing addresses")
+    public void userFillsTheBillingAddresses() {
+        String fullName = ScenarioContext.get("fullName", String.class);
+        String address = ScenarioContext.get("address", String.class);
+        String city = ScenarioContext.get("city", String.class);
+        String country = ScenarioContext.get("country", String.class);
+        String zipCode = ScenarioContext.get("zipCode", String.class);
+
+        checkoutPageProvider.get().scrollToEnd();
+
+        Assert.assertTrue(checkoutPageProvider.get().enterFullName(fullName),
+                "Failed to enter first name");
+        Assert.assertTrue(checkoutPageProvider.get().enterAddressLine1(address),
+                "Failed to enter address");
+        Assert.assertTrue(checkoutPageProvider.get().enterCity(city),
+                "Failed to enter city");
+        Assert.assertTrue(checkoutPageProvider.get().enterZipCode(zipCode),
+                "Failed to enter zip code");
+        Assert.assertTrue(checkoutPageProvider.get().enterCountry(country),
+                "Failed to enter country");
+    }
 }
+

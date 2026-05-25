@@ -22,6 +22,9 @@ public class PaymentMethodPage extends BasePage {
     @AndroidFindBy(accessibility = "Review Order button")
     private WebElement reviewOrderButton;
 
+    @AndroidFindBy(uiAutomator = "new UiSelector().className(\"android.widget.ImageView\").instance(4)")
+    private WebElement shippingAsBillingAddressCheckBox;
+
     @Inject
     public PaymentMethodPage(AppiumDriver driver) {
         super(driver);
@@ -45,5 +48,9 @@ public class PaymentMethodPage extends BasePage {
 
     public boolean clickReviewOrderButton() {
         return click(reviewOrderButton);
+    }
+
+    public boolean clickShippingAsBillingAddressCheckBox() {
+        return click(shippingAsBillingAddressCheckBox);
     }
 }

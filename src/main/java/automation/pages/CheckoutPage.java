@@ -75,4 +75,24 @@ public class CheckoutPage extends BasePage {
             return false;
         }
     }
+
+    public boolean scrollToCityField() {
+        try {
+            scrollToText("Zip Code*");
+            return true;
+        } catch (Exception e) {
+            log.error("Failed to scroll to City field: {}", e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean scrollToEnd(){
+        try {
+            scrollDown();
+            return true;
+        } catch (Exception e) {
+            log.error("Failed to scroll down: {}", e.getMessage());
+            return false;
+        }
+    }
 }

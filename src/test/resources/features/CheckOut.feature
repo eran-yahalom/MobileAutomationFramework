@@ -14,3 +14,17 @@ Feature: Checkout process
     Then user places the order and sees the confirmation message
     And user clicks on the continue shopping button
     And user is in the products page
+
+  Scenario Outline: successfully checkout with valid information from json file
+    When user fills in checkout information using data from "user_details.json" at index <index>
+    And user fills payment method using data from "user_details.json" at index <index>
+    And user clicks on the shipping same as billing checkbox
+    And user fills the billing addresses
+    And user clicks on confirm order button
+    Then user places the order and sees the confirmation message
+    And user clicks on the continue shopping button
+    And user is in the products page
+
+    Examples:
+      | index |
+      | 0     |

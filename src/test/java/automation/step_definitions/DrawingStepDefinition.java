@@ -113,7 +113,8 @@ public class DrawingStepDefinition {
     @Then("user should verify that the longitude and latitude data is updated after starting the observation")
     public void userShouldVerifyThatTheLongitudeAndLatitudeDataIsUpdatedAfterStartingTheObservation() {
         String latitudeBefore = ScenarioContext.get("start_latitude", String.class);
-        String longitudeBefore = ScenarioContext.get("start_longitude", String.class);
+         String longitudeBefore = ScenarioContext.get("start_longitude", String.class);
+
 
         String latitudeAfter = geoLocationPageProvider.get().getLatitude();
         String longitudeAfter = geoLocationPageProvider.get().getLongitude();
@@ -121,4 +122,5 @@ public class DrawingStepDefinition {
         Assert.assertNotEquals(latitudeBefore, latitudeAfter, "Latitude should be updated before starting observation");
         Assert.assertNotEquals(longitudeBefore, longitudeAfter, "Longitude should be updated before starting observation");
     }
+
 }
