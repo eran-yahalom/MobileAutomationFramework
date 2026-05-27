@@ -7,6 +7,8 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserDetailsData {
     private String fullName;
+    private String firstName;
+    private String lastName;
     private String address1;
     private String city;
     private String zipCode;

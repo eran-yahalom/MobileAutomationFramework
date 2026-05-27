@@ -4,23 +4,22 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import io.cucumber.guice.ScenarioScoped;
 import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.android.AndroidDriver;
-import automation.di.AndroidDriverProvider;
+import automation.di.AppiumDriverProvider; // שים לב לשינוי בשם ה-Provider
 
 public class MobileGuiceModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        // קישור ליבה יחיד עבור הדרייבר האנדרואידי
-        bind(AndroidDriver.class)
-                .toProvider(AndroidDriverProvider.class)
+        // קישור ליבה יחיד והפעם בצורה גנרית עבור AppiumDriver דרך ה-Provider החדש
+        bind(AppiumDriver.class)
+                .toProvider(AppiumDriverProvider.class)
                 .in(ScenarioScoped.class);
     }
 
-    @Provides
-    @ScenarioScoped
-    public AppiumDriver provideAppiumDriver(AndroidDriver androidDriver) {
-        // מבטיח שכל קלאס שמבקש AppiumDriver יקבל בדיוק את אותו המופע של הטרד
-        return androidDriver;
-    }
+    /*
+     מתודת ה-@Provides הישנה נמחקה!
+     מכיוון שקשרנו את AppiumDriver ישירות ל-Provider החדש ב-configure(),
+     כל קלאס בפרויקט שיבקש AppiumDriver יקבל אוטומטית את המופע הנכון (Android או iOS)
+     בטווח של ה-ScenarioScoped, בלי צורך בשכבת תיווך נוספת.
+    */
 }

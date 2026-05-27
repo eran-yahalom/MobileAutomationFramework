@@ -31,7 +31,7 @@ public class CartPage extends BasePage {
     @AndroidFindBy(accessibility = "total price")
     private WebElement totalPriceLabel;
 
-    @AndroidFindBy(accessibility = "Proceed To Checkout button")
+    @AndroidFindBy(accessibility = "test-CHECKOUT")
     private WebElement proceedToCheckoutButton;
 
     @AndroidFindBy(accessibility = "Go Shopping button")

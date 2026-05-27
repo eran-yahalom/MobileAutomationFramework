@@ -1,10 +1,7 @@
 package automation.step_definitions;
 
 import automation.configurations.EnvManager;
-import automation.pages.CheckOutCompletePage;
-import automation.pages.CheckoutPage;
-import automation.pages.PaymentMethodPage;
-import automation.pages.ReviewYourOrderPage;
+import automation.pages.*;
 import automation.utils.JsonDataLoaderUtils;
 import automation.utils.ScenarioContext;
 import com.google.inject.Inject;
@@ -27,29 +24,25 @@ public class CheckOutStepDefinition {
     private final Provider<PaymentMethodPage> paymentMethodPageProvider;
     private final Provider<CheckOutCompletePage> checkOutCompletePageProvider;
     private final Provider<ReviewYourOrderPage> reviewYourOrderPageProvider;
+    private final Provider<CheckOutOverViewPage> checkOutOverViewPageProvider;
 
     @Inject
-    public CheckOutStepDefinition(Provider<CheckoutPage> checkoutPageProvider, Provider<PaymentMethodPage> paymentMethodPageProvider, Provider<CheckOutCompletePage> checkOutCompletePageProvider, Provider<ReviewYourOrderPage> reviewYourOrderPageProvider) {
+    public CheckOutStepDefinition(Provider<CheckoutPage> checkoutPageProvider, Provider<PaymentMethodPage> paymentMethodPageProvider, Provider<CheckOutCompletePage> checkOutCompletePageProvider, Provider<ReviewYourOrderPage> reviewYourOrderPageProvider, Provider<CheckOutOverViewPage> checkOutOverViewPageProvider) {
         this.checkoutPageProvider = checkoutPageProvider;
         this.paymentMethodPageProvider = paymentMethodPageProvider;
         this.checkOutCompletePageProvider = checkOutCompletePageProvider;
         this.reviewYourOrderPageProvider = reviewYourOrderPageProvider;
+        this.checkOutOverViewPageProvider = checkOutOverViewPageProvider;
     }
 
-    @And("user fills in the checkout information")
+    @And("user fills in the checkout:information page details")
     public void userFillsInTheCheckoutInformation() {
-        Assert.assertTrue(checkoutPageProvider.get().enterFullName(EnvManager.get().getCreditCardHolderName()),
+        Assert.assertTrue(checkoutPageProvider.get().enterFirstName(EnvManager.get().getCreditCardHolderName()),
                 "Failed to enter first name");
-        Assert.assertTrue(checkoutPageProvider.get().enterAddressLine1(faker.address().streetAddress()),
+        Assert.assertTrue(checkoutPageProvider.get().enterLastName(faker.address().streetAddress()),
                 "Failed to enter address");
-        Assert.assertTrue(checkoutPageProvider.get().enterCity(faker.address().city()),
-                "Failed to enter city");
         Assert.assertTrue(checkoutPageProvider.get().enterZipCode(faker.address().zipCode()),
                 "Failed to enter zip code");
-        Assert.assertTrue(checkoutPageProvider.get().enterCountry(faker.address().country()),
-                "Failed to enter country");
-        Assert.assertTrue(checkoutPageProvider.get().clickToPaymentButton(),
-                "Failed to click on payment button");
     }
 
     @And("user selects payment method and confirms the order")
@@ -72,8 +65,8 @@ public class CheckOutStepDefinition {
                 "Failed to click on place order button");
     }
 
-    @And("user clicks on the continue shopping button")
-    public void userClicksOnTheContinueShoppingButton() {
+    @And("user clicks on the checkout:complete back home button")
+    public void userClicksOnTheBackHomeButton() {
         Assert.assertTrue(checkOutCompletePageProvider.get().clickContinueShoppingButton(),
                 "Failed to click on continue shopping button");
     }
@@ -85,38 +78,36 @@ public class CheckOutStepDefinition {
         UserDetailsData scenario = UserData.get(index);
         Assert.assertNotNull(UserData, "Test scenarios should not be null");
 
-        String fullName = scenario.getFullName();
-        String address = scenario.getAddress1();
-        String city = scenario.getCity();
-        String country = scenario.getCountry();
-
-        String expiryDate = scenario.getCardExpiry();
+        String firstName = scenario.getFirstName();
+        String lastName = scenario.getLastName();
         String zipCode = scenario.getZipCode();
-        String cardNumber = scenario.getCardNumber();
-        String cvv = scenario.getCardCVV();
 
-        ScenarioContext.save("fullName", fullName);
-        ScenarioContext.save("address", address);
-        ScenarioContext.save("city", city);
-        ScenarioContext.save("country", country);
-        ScenarioContext.save("expiryDate", expiryDate);
-        ScenarioContext.save("zipCode", zipCode);
-        ScenarioContext.save("cardNumber", cardNumber);
-        ScenarioContext.save("cvv", cvv);
+//        String fullName = scenario.getFullName();
+//        String address = scenario.getAddress1();
+//        String city = scenario.getCity();
+//        String country = scenario.getCountry();
+//
+//        String expiryDate = scenario.getCardExpiry();
+//        String zipCode = scenario.getZipCode();
+//        String cardNumber = scenario.getCardNumber();
+//        String cvv = scenario.getCardCVV();
+
+//        ScenarioContext.save("fullName", fullName);
+//        ScenarioContext.save("address", address);
+//        ScenarioContext.save("city", city);
+//        ScenarioContext.save("country", country);
+//        ScenarioContext.save("expiryDate", expiryDate);
+//        ScenarioContext.save("zipCode", zipCode);
+//        ScenarioContext.save("cardNumber", cardNumber);
+//        ScenarioContext.save("cvv", cvv);
 
 
-        Assert.assertTrue(checkoutPageProvider.get().enterFullName(fullName),
+        Assert.assertTrue(checkoutPageProvider.get().enterFirstName(firstName),
                 "Failed to enter first name");
-        Assert.assertTrue(checkoutPageProvider.get().enterAddressLine1(address),
+        Assert.assertTrue(checkoutPageProvider.get().enterLastName(lastName),
                 "Failed to enter address");
-        Assert.assertTrue(checkoutPageProvider.get().enterCity(city),
-                "Failed to enter city");
         Assert.assertTrue(checkoutPageProvider.get().enterZipCode(zipCode),
                 "Failed to enter zip code");
-        Assert.assertTrue(checkoutPageProvider.get().enterCountry(country),
-                "Failed to enter country");
-        Assert.assertTrue(checkoutPageProvider.get().clickToPaymentButton(),
-                "Failed to click on payment button");
     }
 
     @And("user fills payment method using data from {string} at index {int}")
@@ -158,7 +149,7 @@ public class CheckOutStepDefinition {
 
         checkoutPageProvider.get().scrollToEnd();
 
-        Assert.assertTrue(checkoutPageProvider.get().enterFullName(fullName),
+        Assert.assertTrue(checkoutPageProvider.get().enterFirstName(fullName),
                 "Failed to enter first name");
         Assert.assertTrue(checkoutPageProvider.get().enterAddressLine1(address),
                 "Failed to enter address");
@@ -169,5 +160,18 @@ public class CheckOutStepDefinition {
         Assert.assertTrue(checkoutPageProvider.get().enterCountry(country),
                 "Failed to enter country");
     }
+
+    @And("user click on checkout:overview page finish button")
+    public void clickOnCheckOutOverViewFinishButton() {
+        Assert.assertTrue(checkOutOverViewPageProvider.get().clickOnFinishButton(), "Cant click on finishButton");
+    }
+
+    @And("user click on checkout:information continue button")
+    public void userClicksOnCheckoutInformationPageContinueButton() {
+        Assert.assertTrue(checkoutPageProvider.get().clickOnContinueButton(),
+                "Failed to click on continue button");
+    }
+
+
 }
 

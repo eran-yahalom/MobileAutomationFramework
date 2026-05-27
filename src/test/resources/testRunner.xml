@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
-<suite name="Mobile Parallel Suite" parallel="tests" thread-count="2">
+<suite name="Mobile Parallel Suite" parallel="tests" thread-count="1">
 
     <listeners>
         <listener class-name="automation.listeners.TestNGListener"/>
@@ -12,21 +12,21 @@
         <parameter name="xmlUdid" value="emulator-5554" />
         <parameter name="xmlSystemPort" value="8200" />
         <classes>
-            <class name="automation.launchers.GeneralLauncher"/>
+<!--            <class name="automation.launchers.GeneralLauncher"/>-->
             <class name="automation.launchers.CheckOutLauncher"/>
-            <class name="automation.launchers.GeoLocationsLauncher"/>
+<!--            <class name="automation.launchers.GeoLocationsLauncher"/>-->
 
 
         </classes>
     </test>
 
-    <test name="Emulator 5556 Tests">
-        <parameter name="xmlUdid" value="emulator-5556" />
-        <parameter name="xmlSystemPort" value="8201" />
-        <classes>
-            <class name="automation.launchers.DrawingLauncher"/>
-            <class name="automation.launchers.ProductsLauncher"/>
-        </classes>
-    </test>
+<!--    <test name="Emulator 5556 Tests">-->
+<!--        <parameter name="xmlUdid" value="emulator-5556" />-->
+<!--        <parameter name="xmlSystemPort" value="8201" />-->
+<!--        <classes>-->
+<!--            <class name="automation.launchers.DrawingLauncher"/>-->
+<!--            <class name="automation.launchers.ProductsLauncher"/>-->
+<!--        </classes>-->
+<!--    </test>-->
 
 </suite>

@@ -13,7 +13,7 @@ import java.util.List;
 
 public class ProductsPage extends BasePage {
 
-    @AndroidFindBy(uiAutomator = "new UiSelector().text(\"Products\")")
+    @AndroidFindBy(uiAutomator = "new UiSelector().text(\"PRODUCTS\")")
     private WebElement productsHeaderContainer;
 
     @AndroidFindBy(accessibility = "store item")

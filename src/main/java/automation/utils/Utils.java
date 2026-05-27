@@ -118,7 +118,7 @@ public class Utils {
         Set<String> uniqueProducts = new HashSet<>();
 
         for (int i = 0; i < numberOfItems; i++) {
-            List<WebElement> visibleLabels = driver.findElements(AppiumBy.accessibilityId("store item text"));
+            List<WebElement> visibleLabels = driver.findElements(AppiumBy.accessibilityId("test-Item title"));
 
             for (WebElement label : visibleLabels) {
                 try {

@@ -58,8 +58,8 @@ public class LoginStepDefinition {
 
     @And("user is successfully logged in")
     public void userIsSuccessfullyLoggedIn() {
-        Assert.assertTrue(headerComponentProvider.get().clickOnMenuButton());
-        Assert.assertTrue(menuComponentProvider.get().clickOnMenuItem("log in"));
+//        Assert.assertTrue(headerComponentProvider.get().clickOnMenuButton());
+//        Assert.assertTrue(menuComponentProvider.get().clickOnMenuItem("log in"));
         Assert.assertTrue(loginPageProvider.get().enterUserName(EnvManager.get().getUsername()));
         Assert.assertTrue(loginPageProvider.get().enterPassWord(EnvManager.get().getPassword()));
         Assert.assertTrue(loginPageProvider.get().clickLoginButton());

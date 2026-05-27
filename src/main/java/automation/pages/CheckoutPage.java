@@ -9,8 +9,11 @@ import org.openqa.selenium.WebElement;
 @Log4j2
 public class CheckoutPage extends BasePage {
 
-    @AndroidFindBy(accessibility = "Full Name* input field")
-    private WebElement fullNameField;
+    @AndroidFindBy(accessibility = "test-First Name")
+    private WebElement firstName;
+
+    @AndroidFindBy(accessibility = "test-Last Name")
+    private WebElement lastName;
 
     @AndroidFindBy(accessibility = "Address Line 1* input field")
     private WebElement addressLine1Field;
@@ -24,27 +27,36 @@ public class CheckoutPage extends BasePage {
     @AndroidFindBy(accessibility = "State/Region input field")
     private WebElement stateRegionField;
 
-    @AndroidFindBy(accessibility = "Zip Code* input field")
+    @AndroidFindBy(accessibility = "test-Zip/Postal Code")
     private WebElement zipCodeField;
 
     @AndroidFindBy(accessibility = "Country* input field")
     private WebElement countryField;
 
-    @AndroidFindBy(accessibility = "To Payment button")
-    private WebElement toPaymentButton;
+    @AndroidFindBy(accessibility = "test-CONTINUE")
+    private WebElement continueButton;
+
+    @AndroidFindBy(accessibility = "test-CANCEL")
+    private WebElement cancelButton;
 
     @Inject
     public CheckoutPage(AppiumDriver driver) {
         super(driver);
     }
 
-    public boolean enterFullName(String fullName) {
-        return enterDetails(fullNameField, fullName);
+    public boolean enterFirstName(String fName) {
+        return enterDetails(firstName, fName);
+    }
+
+    public boolean enterLastName(String lName){
+        return enterDetails(lastName, lName);
     }
 
     public boolean enterAddressLine1(String addressLine1) {
         return enterDetails(addressLine1Field, addressLine1);
     }
+
+
 
     public boolean enterAddressLine2(String addressLine2) {
         return enterDetails(addressLine2Field, addressLine2);
@@ -66,9 +78,9 @@ public class CheckoutPage extends BasePage {
         return enterDetails(countryField, country);
     }
 
-    public boolean clickToPaymentButton() {
+    public boolean clickOnContinueButton() {
         try {
-            click(toPaymentButton);
+            click(continueButton);
             return true;
         } catch (Exception e) {
             log.error("Failed to click To Payment button: {}", e.getMessage());
@@ -86,7 +98,7 @@ public class CheckoutPage extends BasePage {
         }
     }
 
-    public boolean scrollToEnd(){
+    public boolean scrollToEnd() {
         try {
             scrollDown();
             return true;
@@ -94,5 +106,9 @@ public class CheckoutPage extends BasePage {
             log.error("Failed to scroll down: {}", e.getMessage());
             return false;
         }
+    }
+
+    public boolean clickOnCancelButton() {
+        return click(cancelButton);
     }
 }

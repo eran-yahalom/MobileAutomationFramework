@@ -24,7 +24,7 @@ public class ProductPage extends BasePage {
     @AndroidFindBy(xpath = "//android.view.ViewGroup[contains(@content-desc, 'circle')]")
     private List<WebElement> colorCircles1;
 
-    @AndroidFindBy(accessibility = "Add To Cart button")
+    @AndroidFindBy(accessibility = "test-ADD TO CART")
     private WebElement addToCartButton;
 
     @AndroidFindBy(accessibility = "counter plus button")
@@ -62,6 +62,9 @@ public class ProductPage extends BasePage {
     }
 
     public boolean addToCart() {
+        scrollToText("ADD TO CART");
+//        scrollDown();
+        delayForMobileDomRefresh();
         return click(addToCartButton);
     }
 

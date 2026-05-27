@@ -10,8 +10,8 @@ public class CheckOutCompletePage extends BasePage {
     @AndroidFindBy(uiAutomator = "new UiSelector().text(\"Checkout Complete\")")
     private WebElement checkoutCompleteTitle;
 
-    @AndroidFindBy(accessibility = "Continue Shopping button")
-    private WebElement continueShoppingButton;
+    @AndroidFindBy(accessibility = "test-BACK HOME")
+    private WebElement backHomeButton;
 
     @Inject
     public CheckOutCompletePage(AppiumDriver driver) {
@@ -23,6 +23,6 @@ public class CheckOutCompletePage extends BasePage {
     }
 
     public boolean clickContinueShoppingButton() {
-        return click(continueShoppingButton);
+        return click(backHomeButton);
     }
 }

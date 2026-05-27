@@ -29,6 +29,21 @@ public class ConfigurationsUtils {
         return prop.getProperty(key);
     }
 
+    /**
+     * קורא ערכים ספציפית מתוך קובץ ההגדרות הגלובלי (global.properties)
+     */
+    public static String readGlobalProperty(String key) {
+        Properties prop = new Properties();
+        try {
+            FileInputStream fis = new FileInputStream("src/test/resources/global.properties");
+            prop.load(fis);
+        } catch (IOException e) {
+            log.error("Error: Unable to find the Global Properties file at the specified path {}", e.getMessage());
+            e.printStackTrace();
+        }
+        return prop.getProperty(key);
+    }
+
     public static boolean isPageHeaderCorrect(WebElement element, String pageHeader) {
         return element.getText().equalsIgnoreCase(ConfigurationsUtils.readProperty(pageHeader));
     }

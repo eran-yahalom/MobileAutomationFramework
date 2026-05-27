@@ -16,7 +16,7 @@ public class HeaderComponent extends BaseComponent {
     @AndroidFindBy(accessibility = "open menu")
     private WebElement menuButton;
 
-    @AndroidFindBy(accessibility = "cart badge")
+    @AndroidFindBy(uiAutomator = "new UiSelector().className(\"android.widget.ImageView\").instance(3)")
     private WebElement cartButton;
 
     @AndroidFindBy(accessibility = "sort button")

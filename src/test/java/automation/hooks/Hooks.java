@@ -3,46 +3,25 @@ package automation.hooks;
 import automation.utils.AllureUtils;
 import automation.drivers.DriverManager;
 import com.google.inject.Inject;
-import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.AppiumDriver;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
 import lombok.extern.log4j.Log4j2;
-import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import java.time.Duration;
 
 @Log4j2
 public class Hooks {
-    private final AndroidDriver driver;
+    private final AppiumDriver driver;
 
     @Inject
-    public Hooks(AndroidDriver driver) {
-        // Guice יזריק כאן את המופע הייחודי לטרד ולסנריו הנוכחי
+    public Hooks(AppiumDriver driver) {
+        // Guice מזריק כאן אוטומטית את מופע הדרייבר המתאים (Android או iOS) הייחודי לטרד הנוכחי
         this.driver = driver;
     }
 
     @Before
     public void setUp() {
-        log.info("Scenario Setup: Handling initial application pop-ups.");
-
-        // הגנה אגרסיבית מבוססת טקסט - תופס "אישור", "אפשר", "OK", "Allow"
-        String[] commonAlertButtons = {
-                "//*[@text='OK' or @text='ok' or @text='אישור']",
-                "//*[@text='ALLOW' or @text='Allow' or @text='אפשר בזמן שימוש באפליקציה']",
-                "//android.widget.Button[@id='android:id/button2']"
-        };
-
-        for (String xpath : commonAlertButtons) {
-            try {
-                WebDriverWait quickWait = new WebDriverWait(driver, Duration.ofSeconds(2));
-                quickWait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpath))).click();
-                log.info("Bypassed initial pop-up using locator: {}", xpath);
-            } catch (Exception e) {
-                // לא נמצא פופ-אפ ספציפי זה, ממשיך לבא בתור בלי להיתקע
-            }
-        }
+        log.info("Starting Scenario: Appium Driver is initialized and ready.");
     }
 
     @After
@@ -51,6 +30,7 @@ public class Hooks {
             if (scenario.isFailed() && driver != null) {
                 try {
                     String screenshotName = "Failure Screenshot - " + scenario.getName();
+                    // אילור מקבל את ה-AppiumDriver ומצלם מסך בצורה אחידה לשתי הפלטפורמות
                     AllureUtils.attachScreenshot(driver, screenshotName);
                     AllureUtils.attachPageSource(driver);
                     log.info("Successfully attached mobile artifacts to Allure.");
@@ -60,7 +40,7 @@ public class Hooks {
             }
         } finally {
             log.info("Tearing down driver and cleaning ThreadLocal variables...");
-            // מנקה את הסשן של אפיום ומאפס את ה-ThreadLocal לטסט הבא
+            // סגירת הסשן בשרת האפיום (מנקה גם XCUITest וגם UiAutomator2) ואיפוס ה-ThreadLocal
             DriverManager.quitDriver();
         }
     }
