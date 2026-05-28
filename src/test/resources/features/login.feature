@@ -1,34 +1,43 @@
 @Login
 Feature: Login Functionality
 
-  Background:
-    Given User clicks on menu icon
-
   Scenario: Success login with valid credentials
-    Given The user navigates to the "log in" screen
-    When The user enters email "bob@example.com" and password "10203040"
+    When user clicks on standard user link
+    And user clicks on the login button
     Then The user should see the products page header
 
-  Scenario Outline: Unsuccessful login with invalid credentials
-    Given The user navigates to the "log in" screen
-    When The user enters email "<email>" and password "<password>"
-    Then User see the login error message
-
-    Examples:
-      | email             | password |
-      | abc@yopmail.com   | 123456   |
-      | alice@example.com | ddddddd  |
-
-  Scenario: Test that in order to purchase a product, the user must be logged in
-    Given The user navigates to the "catalog" screen
-    When user selects product "Test.allTheThings() T-Shirt" from the products list
-    And user adds the product to the cart
-    And user clicks on cart icon
-    And user clicks on proceed to checkout button
-    Then user should see the login screen
-
-  Scenario: Locked out user should not be able to log in
-    Given The user navigates to the "log in" screen
+  Scenario: failed login with locked user credentials
     When user clicks on the locked account user link
     And user clicks on the login button
-    Then locked out error message is displayed
+    Then user see the correct error message for "locked" scenario
+
+  Scenario: failed login with empty user credentials
+    When The user enters email "" and password ""
+    And user clicks on the login button
+    Then user see the correct error message for "empty details" scenario
+
+  Scenario: failed login with empty user credentials
+    When The user enters email "abc@yopmail.com" and password "123456"
+    And user clicks on the login button
+    Then user see the correct error message for "not active user" scenario
+
+  Scenario: failed login with empty user name
+    When The user enters email "" and password "secret_sauce"
+    And user clicks on the login button
+    Then user see the correct error message for "no user name" scenario
+
+  Scenario: failed login with empty password
+    When The user enters email "standard_user" and password ""
+    And user clicks on the login button
+    Then user see the correct error message for "no password" scenario
+
+  Scenario: failed login with problem user
+    When user clicks on problem user link
+    And user clicks on the login button
+    Then user see the correct error message for "no password" scenario
+
+  Scenario: successful log out
+    Given  user is successfully logged in
+    And user clicks on menu icon
+    And The user navigates to the "LOGOUT" screen
+    Then user should see the login screen

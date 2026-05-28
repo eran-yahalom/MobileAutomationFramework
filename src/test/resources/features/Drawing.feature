@@ -3,8 +3,8 @@ Feature: Drawing feature to verify drawing actions
 
   Background:
     Given user is successfully logged in
-    And User clicks on menu icon
-    And The user navigates to the "Drawing" screen
+    And user clicks on menu icon
+    And The user navigates to the "DRAWING" screen
 
 
   Scenario: Verify that the user can draw a shape on the canvas

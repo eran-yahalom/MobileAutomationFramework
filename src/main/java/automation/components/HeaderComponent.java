@@ -13,32 +13,35 @@ import java.util.Map;
 @ScenarioScoped
 public class HeaderComponent extends BaseComponent {
 
-    @AndroidFindBy(accessibility = "open menu")
+    @AndroidFindBy(accessibility = "test-Menu")
     private WebElement menuButton;
 
     @AndroidFindBy(uiAutomator = "new UiSelector().className(\"android.widget.ImageView\").instance(3)")
     private WebElement cartButton;
 
-    @AndroidFindBy(accessibility = "sort button")
+    @AndroidFindBy(accessibility = "test-Modal Selector Button")
     private WebElement sortButton;
 
-    @AndroidFindBy(uiAutomator = "new UiSelector().className(\"android.view.ViewGroup\").childSelector(new UiSelector().description(\"open menu\"))")
+    @AndroidFindBy(uiAutomator = "new UiSelector().className(\"android.widget.ImageView\").instance(0)")
     private WebElement topHeader;
 
-    @AndroidFindBy(xpath = "//android.view.ViewGroup[@content-desc=\"cart badge\"]/android.widget.TextView")
+    @AndroidFindBy(xpath = "//android.view.ViewGroup[@content-desc=\"test-Cart\"]/android.view.ViewGroup/android.widget.TextView")
     private WebElement cartBadgeCount;
 
-    @AndroidFindBy(accessibility = "nameAsc")
+    @AndroidFindBy(uiAutomator = "new UiSelector().text(\"Name (A to Z)\")")
     private WebElement nameAscSortOption;
 
-    @AndroidFindBy(accessibility = "nameDesc")
+    @AndroidFindBy(uiAutomator = "new UiSelector().text(\"Name (Z to A)\")")
     private WebElement nameDescSortOption;
 
-    @AndroidFindBy(accessibility = "priceAsc")
+    @AndroidFindBy(uiAutomator = "new UiSelector().text(\"Price (low to high)\")")
     private WebElement priceAscSortOption;
 
-    @AndroidFindBy(accessibility = "priceDesc")
+    @AndroidFindBy(uiAutomator = "new UiSelector().text(\"Price (high to low)\")")
     private WebElement priceDescSortOption;
+
+    @AndroidFindBy(uiAutomator = "new UiSelector().text(\"Cancel\")")
+    private WebElement cancelButton;
 
     @Inject
     public HeaderComponent(AppiumDriver driver) {
@@ -106,5 +109,9 @@ public class HeaderComponent extends BaseComponent {
             log.info("Unknown sort option type requested: {}", sortType);
             return false;
         }
+    }
+
+    public boolean clickOnCancelButton() {
+        return click(cancelButton);
     }
 }

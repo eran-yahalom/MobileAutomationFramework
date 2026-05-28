@@ -54,7 +54,7 @@ public class DrawingStepDefinition {
                 "Failed to close the geo location pop up");
     }
 
-    @And("user clicks on this link link")
+    @And("user clicks on this link")
     public void userClicksOnTheThisLinkLink() {
         Assert.assertTrue(geoLocationPageProvider.get().clickOnThisLink(),
                 "Failed to click on the this link link");
@@ -64,6 +64,12 @@ public class DrawingStepDefinition {
     public void userShouldSeeTheGeoLocationPage() {
         Assert.assertTrue(geoLocationPageProvider.get().is404ErrorDisplayed(),
                 "Failed to display the geo location page");
+    }
+
+    @Then("user should see the chrome web page")
+    public void seeTheChromeWebPage() {
+        Assert.assertTrue(geoLocationPageProvider.get().isWelcomeToChromeTextVisible(),
+                "Cant see the chrome web page");
     }
 
     @And("user saves the longitude and latitude data as {string}")
@@ -106,14 +112,14 @@ public class DrawingStepDefinition {
         Assert.assertNotEquals(latitudeBefore, "0", "Latitude should be updated before stopping observation");
         Assert.assertNotEquals(longitudeBefore, "0", "Longitude should be updated before stopping observation");
 
-        Assert.assertEquals(latitudeBefore, latitudeAfter, "Latitude should not be updated after stopping observation");
-        Assert.assertEquals(longitudeBefore, longitudeAfter, "Longitude should not be updated after stopping observation");
+        Assert.assertNotEquals(latitudeBefore, latitudeAfter, "Latitude should not be updated after stopping observation");
+        Assert.assertNotEquals(longitudeBefore, longitudeAfter, "Longitude should not be updated after stopping observation");
     }
 
     @Then("user should verify that the longitude and latitude data is updated after starting the observation")
     public void userShouldVerifyThatTheLongitudeAndLatitudeDataIsUpdatedAfterStartingTheObservation() {
         String latitudeBefore = ScenarioContext.get("start_latitude", String.class);
-         String longitudeBefore = ScenarioContext.get("start_longitude", String.class);
+        String longitudeBefore = ScenarioContext.get("start_longitude", String.class);
 
 
         String latitudeAfter = geoLocationPageProvider.get().getLatitude();

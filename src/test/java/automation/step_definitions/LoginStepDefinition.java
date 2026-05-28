@@ -50,7 +50,7 @@ public class LoginStepDefinition {
                 "Products page header is incorrect or not visible");
     }
 
-    @And("User clicks on menu icon")
+    @And("user clicks on menu icon")
     public void clickMenuIcon() {
         Assert.assertTrue(headerComponentProvider.get().clickOnMenuButton(),
                 "Failed to click on menu icon");
@@ -76,7 +76,7 @@ public class LoginStepDefinition {
 
     @Then("User see the login error message")
     public void userSeeTheLoginErrorMessage() {
-        Assert.assertTrue(loginPageProvider.get().isLoginErrorMessageDisplayed(),
+        Assert.assertTrue(loginPageProvider.get().isLoginErrorMessageDisplayed(""),
                 "Login error message is not displayed or does not match expected text");
     }
 
@@ -88,7 +88,7 @@ public class LoginStepDefinition {
 
     @And("user clicks on the locked account user link")
     public void userClicksOnTheLockedAccountLoginAttempt() {
-        Assert.assertTrue(loginPageProvider.get().clickLockedOutUserAutoFill());
+        Assert.assertTrue(loginPageProvider.get().clickLockedOutUserLink());
     }
 
     @And("locked out error message is displayed")
@@ -101,5 +101,33 @@ public class LoginStepDefinition {
     public void userClicksOnTheLoginButton() {
         Assert.assertTrue(loginPageProvider.get().clickLoginButton(),
                 "Failed to click on login button");
+    }
+
+    @And("user clicks on standard user link")
+    public void userClicksOnStandardUserLink() {
+        Assert.assertTrue(loginPageProvider.get().clickOnStandardUserLink(),
+                "Failed to click on standard user link");
+    }
+
+    @And("user clicks on locked out user link")
+    public void userClicksOnLockedOutUserLink() {
+        Assert.assertTrue(loginPageProvider.get().clickLockedOutUserLink(),
+                "Failed to click on locked out user link");
+    }
+
+    @And("user clicks on problem user link")
+    public void userClicksOnProblemUserLink() {
+        Assert.assertTrue(loginPageProvider.get().clickLockedOutUserLink(),
+                "Failed to click on problem user link");
+    }
+
+    @And("user see the correct error message for {string} scenario")
+    public void userSeeTheCorrectErrorMessageForScenario(String scenario) {
+        // מפעיל את המתודה, שמריצה את הלמבדה מתוך המפה ומחזירה boolean
+        boolean isErrorMessageCorrect = loginPageProvider.get().checkLoginErrorScenario(scenario);
+
+        // וולידציה של הטסט
+        Assert.assertTrue(isErrorMessageCorrect,
+                String.format("The error message displayed for scenario '%s' is incorrect!", scenario));
     }
 }

@@ -1,6 +1,7 @@
 package automation.pages;
 
 import automation.utils.AndroidSystemHandler;
+import automation.utils.ConfigurationsUtils;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 import io.appium.java_client.AppiumDriver;
@@ -17,14 +18,17 @@ public class GeoLocationPage extends BasePage {
     @AndroidFindBy(accessibility = "Start Observing button")
     private WebElement startObservingButton;
 
-    @AndroidFindBy(accessibility = "latitude data")
+    @AndroidFindBy(accessibility = "test-latitude")
     private WebElement latitudeData;
 
-    @AndroidFindBy(accessibility = "longitude data")
+    @AndroidFindBy(accessibility = "test-longitude")
     private WebElement longitudeData;
 
     @AndroidFindBy(xpath = "//android.widget.TextView[@text=\"404\"]")
     private WebElement error404Text;
+
+    @AndroidFindBy(id="com.android.chrome:id/title")
+    private WebElement welcomeToChromeText;
 
     @Inject
     public GeoLocationPage(AppiumDriver driver) {
@@ -80,5 +84,9 @@ public class GeoLocationPage extends BasePage {
 
     public boolean is404ErrorDisplayed() {
         return getText(error404Text).contains("404");
+    }
+
+    public boolean isWelcomeToChromeTextVisible(){
+        return isDisplayed(welcomeToChromeText) && getText(welcomeToChromeText).equalsIgnoreCase(ConfigurationsUtils.readProperty("welcomeToChrome"));
     }
 }
