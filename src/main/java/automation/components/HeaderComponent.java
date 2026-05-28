@@ -65,7 +65,8 @@ public class HeaderComponent extends BaseComponent {
     }
 
     public String getCartBadgeNumber() {
-        return getText(cartBadgeCount);
+        String badgeText = getText(cartBadgeCount);
+        return (badgeText == null || badgeText.isBlank()) ? "0" : badgeText;
     }
 
     public boolean clickOnSortButton() {

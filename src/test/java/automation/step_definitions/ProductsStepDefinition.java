@@ -140,7 +140,7 @@ public class ProductsStepDefinition {
 
     @And("user removes all items from the cart")
     public void userRemovesAllItemsFromTheCart() {
-        int currentCount = cartPageProvider.get().getTotalNumberOfItems();
+//        int currentCount = cartPageProvider.get().getTotalNumberOfItems();
         Assert.assertTrue(cartPageProvider.get().removeAllProductsWithScroll(),
                 "Failed to remove all items from the cart");
     }
@@ -213,5 +213,39 @@ public class ProductsStepDefinition {
     public void userIncreaseNumberOfItemsInProductPageBy(int quantity) {
         Assert.assertTrue(productPageProvider.get().increaseQuantityOfProduct(quantity),
                 "Failed to increase quantity of product by " + quantity);
+    }
+
+    @Then("user verifies that cart is empty")
+    public void cartIsEmpty() {
+        int numberOfCartItems = cartPageProvider.get().countNumberOfProductElementsInCart();
+        ScenarioContext.save("cartItemsCount", numberOfCartItems);
+
+        Assert.assertEquals(numberOfCartItems, 0,
+                "Cart items are not 0, cart is still full");
+    }
+
+    @And("user clicks on back to products button")
+    public void clickOnBackToProductsButton() {
+        Assert.assertTrue(productPageProvider.get().clickOnBackToProductsButton(),
+                "Click on back to product button was not successful");
+    }
+
+    @Then("number of items in cart badge should be {string}")
+    public void numberOfCartBadgeItemsShouldBe(String count) {
+        String numberOfItemsInCartBadge = ScenarioContext.get("cartBadgeCount", String.class);
+
+        Assert.assertEquals(numberOfItemsInCartBadge, count, "Cart badge don't match the actual item count ");
+    }
+
+    @Then("user {string} the product to the cart from product page")
+    public void userAddOrRemovesTheProductToTheCart(String action) {
+        Assert.assertTrue(productPageProvider.get().doCartAction(action),
+                "Failed to add product to cart");
+    }
+
+    @Then("user {string} product to cart from products page")
+    public void userAddOrRemoveFromProductsPage(String action) {
+        Assert.assertTrue(productsPageProvider.get().doProductsAction(action),
+                "Failed to add/remove product from product page to cart");
     }
 }

@@ -27,10 +27,10 @@ public class Hooks {
     @After
     public void tearDown(Scenario scenario) {
         try {
+            // 1. צילום מסך והפקת לוגים רק במידה והטסט נכשל והדרייבר פעיל
             if (scenario.isFailed() && driver != null) {
                 try {
                     String screenshotName = "Failure Screenshot - " + scenario.getName();
-                    // אילור מקבל את ה-AppiumDriver ומצלם מסך בצורה אחידה לשתי הפלטפורמות
                     AllureUtils.attachScreenshot(driver, screenshotName);
                     AllureUtils.attachPageSource(driver);
                     log.info("Successfully attached mobile artifacts to Allure.");
@@ -39,8 +39,18 @@ public class Hooks {
                 }
             }
         } finally {
+            // 2. שחרור הפורט (8200) וסגירת הסשן בצורה אקטיבית והרמטית
+            if (driver != null) {
+                try {
+                    log.info("[DRIVER] Actively quitting current session to free system ports...");
+                    driver.quit();
+                } catch (Exception e) {
+                    log.error("Failed to perform direct driver.quit(): {}", e.getMessage());
+                }
+            }
+
+            // 3. איפוס סופי של משתני ה-ThreadLocal וה-Memory בפרוורק שלך
             log.info("Tearing down driver and cleaning ThreadLocal variables...");
-            // סגירת הסשן בשרת האפיום (מנקה גם XCUITest וגם UiAutomator2) ואיפוס ה-ThreadLocal
             DriverManager.quitDriver();
         }
     }

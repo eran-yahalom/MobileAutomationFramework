@@ -25,6 +25,21 @@ public class ProductsPage extends BasePage {
     @AndroidFindBy(accessibility = "store item price")
     private List<WebElement> productPrices;
 
+    @AndroidFindBy(uiAutomator = "new UiSelector().description(\"test-ADD TO CART\").instance(0)")
+    private WebElement addToCartButton;
+
+    @AndroidFindBy(uiAutomator = "new UiSelector().description(\"test-REMOVE\")")
+    private WebElement removeButton;
+
+    @AndroidFindBy(xpath = "(//android.view.ViewGroup[@content-desc=\"test-Item\"])")
+    private List<WebElement> products;
+
+    @AndroidFindBy(xpath = "(//android.view.ViewGroup[@content-desc=\"test-ADD TO CART\"])")
+    private List<WebElement> addToCrtButtons;
+
+    @AndroidFindBy(accessibility = "test-REMOVE")
+    private List<WebElement> removeButtons;
+
 
     @Inject
     public ProductsPage(AppiumDriver driver) {
@@ -64,5 +79,13 @@ public class ProductsPage extends BasePage {
 
     public List<String> getAllProductNames() {
         return Utils.getAllProductsNames(driver);
+    }
+
+    public boolean doProductsAction(String action) {
+        if (action.equalsIgnoreCase("add")) {
+            return click(addToCrtButtons.getFirst());
+        } else {
+            return click(removeButtons.getFirst());
+        }
     }
 }

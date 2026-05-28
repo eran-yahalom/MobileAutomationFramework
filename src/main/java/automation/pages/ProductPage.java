@@ -27,6 +27,9 @@ public class ProductPage extends BasePage {
     @AndroidFindBy(accessibility = "test-ADD TO CART")
     private WebElement addToCartButton;
 
+    @AndroidFindBy(accessibility = "test-REMOVE")
+    private WebElement removeButton;
+
     @AndroidFindBy(accessibility = "counter plus button")
     private WebElement increaseQuantityButton;
 
@@ -38,6 +41,9 @@ public class ProductPage extends BasePage {
 
     @AndroidFindBy(accessibility = "product description")
     private WebElement productDescription;
+
+    @AndroidFindBy(accessibility = "test-BACK TO PRODUCTS")
+    private WebElement backToProductsButton;
 
     @Inject
     public ProductPage(AppiumDriver driver) {
@@ -63,9 +69,18 @@ public class ProductPage extends BasePage {
 
     public boolean addToCart() {
         scrollToText("ADD TO CART");
-//        scrollDown();
         delayForMobileDomRefresh();
         return click(addToCartButton);
+    }
+
+    public boolean doCartAction(String action) {
+        if (action.equalsIgnoreCase("add")) {
+            scrollToText("ADD TO CART");
+            delayForMobileDomRefresh();
+            return click(addToCartButton);
+        } else {
+            return click(removeButton);
+        }
     }
 
     public boolean increaseQuantity() {
@@ -96,5 +111,9 @@ public class ProductPage extends BasePage {
 
     public boolean isAddToCartButtonEnabled() {
         return isEnabled(addToCartButton);
+    }
+
+    public boolean clickOnBackToProductsButton() {
+        return click(backToProductsButton);
     }
 }

@@ -9,6 +9,8 @@ import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
 import io.appium.java_client.ios.options.XCUITestOptions;
 
+import java.net.ServerSocket;
+import java.io.IOException;
 import java.net.URL;
 import java.time.Duration;
 
@@ -65,30 +67,33 @@ public class AppiumDriverProvider implements Provider<AppiumDriver> {
                         .setNoReset(true)
                         .setFullReset(false);
 
-
                 driver = new IOSDriver(new URL(APPIUM_URL), options);
             } else {
-                // קונפיגורציית אנדרואיד מתוקנת
-                String systemPort = DriverManager.getSystemPort();
-                if (systemPort == null) {
-                    systemPort = "8200"; // ברירת מחדל יציבה להרצה ישירה ללא תלות ב-XML
+                // 🛠️ מנגנון מציאת פורט דינמי למניעת התנגשויות עם Appium Inspector 🛠️
+                int dynamicSystemPort;
+                try (ServerSocket socket = new ServerSocket(0)) {
+                    dynamicSystemPort = socket.getLocalPort();
+                } catch (IOException e) {
+                    // פולבק בטוח למקרה של בעיית הרשאות רשת מקומית
+                    String xmlSystemPort = DriverManager.getSystemPort();
+                    dynamicSystemPort = (xmlSystemPort != null) ? Integer.parseInt(xmlSystemPort) : 8200;
                 }
 
                 UiAutomator2Options options = new UiAutomator2Options()
                         .setPlatformName("Android")
                         .setAutomationName("UiAutomator2")
                         .setUdid(udid)
-                        .setSystemPort(Integer.parseInt(systemPort))
+                        .setSystemPort(dynamicSystemPort) // <--- הזרקת הפורט הדינמי והחופשי
                         .setApp(ANDROID_SWAGLABS_APK)
-                        // הגדרת חובה המונעת משרת ה-Appium לנסות לנחש רכיבי פתיחה שגויים או ישנים
                         .setAppPackage("com.swaglabsmobileapp")
                         .setAppActivity(".MainActivity")
                         .setAutoGrantPermissions(true)
-                        // התאמה מלאה ל-iOS: מונע מחיקה ואיפוס מחדש של האפליקציה בכל ריצה
                         .setNoReset(false)
                         .setFullReset(false);
-//                        .setNoReset(false) --do both when app is installed and you need a new app on top of it , then comment and uncomment the above 2
-//                        .setFullReset(true);
+
+                // יכולות קריטיות להבטחת הפעלה נקייה גם כשהאפליקציה פתוחה
+                options.setCapability("appium:forceAppLaunch", true);
+                options.setCapability("appium:shouldTerminateApp", true);
 
                 driver = new AndroidDriver(new URL(APPIUM_URL), options);
             }

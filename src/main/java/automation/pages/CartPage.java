@@ -11,16 +11,13 @@ import org.openqa.selenium.interactions.PointerInput;
 import org.openqa.selenium.interactions.Sequence;
 
 import java.time.Duration;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Log4j2
 public class CartPage extends BasePage {
 
-    @AndroidFindBy(accessibility = "product row")
-    private List<WebElement> productRows;
+    @AndroidFindBy(accessibility = "test-Item")
+    private List<WebElement> products;
 
     @AndroidFindBy(accessibility = "product label")
     private List<WebElement> productLabels;
@@ -103,39 +100,94 @@ public class CartPage extends BasePage {
         }
     }
 
+//    public boolean removeAllProductsWithScroll() {
+//        boolean canScrollMore = true;
+//
+//        while (canScrollMore) {
+//            List<WebElement> removeButtons = driver.findElements(AppiumBy.accessibilityId("test-REMOVE"));
+//
+//            if (!removeButtons.isEmpty()) {
+//                int itemsToRemove = removeButtons.size();
+//                for (int i = 0; i < itemsToRemove; i++) {
+//                    try {
+//                        driver.findElement(AppiumBy.accessibilityId("test-REMOVE")).click();
+//                        Thread.sleep(300);
+//                    } catch (Exception e) {
+//                        log.info("Moving passed a removed item or an off-screen element, will try next one...");
+//                    }
+//                }
+//            }
+//
+//            try {
+//                driver.findElement(AppiumBy.androidUIAutomator(
+//                        "new UiScrollable(new UiSelector().scrollable(true)).scrollForward()"
+//                ));
+//            } catch (Exception e) {
+//                canScrollMore = false;
+//            }
+//        }
+//
+//        boolean isCartEmpty = driver.findElements(AppiumBy.accessibilityId("test-REMOVE")).isEmpty();
+//        log.info("All items removed successfully: {}", isCartEmpty);
+//
+//        return isCartEmpty;
+//    }
+
+
     public boolean removeAllProductsWithScroll() {
-        boolean canScrollMore = true;
+        log.info("Starting to remove all products from the cart...");
+        boolean keepChecking = true;
 
-        while (canScrollMore) {
-            List<WebElement> removeButtons = driver.findElements(AppiumBy.accessibilityId("remove item"));
+        while (keepChecking) {
+            // 1. שליפת כפתורי ה-REMOVE שגלויים כרגע על המסך
+            List<WebElement> visibleRemoveButtons = driver.findElements(AppiumBy.accessibilityId("test-REMOVE"));
 
-            if (!removeButtons.isEmpty()) {
-                int itemsToRemove = removeButtons.size();
-                for (int i = 0; i < itemsToRemove; i++) {
-                    try {
-                        driver.findElement(AppiumBy.accessibilityId("remove item")).click();
-                        Thread.sleep(300);
-                    } catch (Exception e) {
-                        log.info("Moving passed a removed item or an off-screen element, will try next one...");
-                    }
+            // 2. כל עוד יש כפתורים על המסך, נמחק תמיד את הכפתור הראשון (הוא תמיד קיים באינדקס 0)
+            while (!visibleRemoveButtons.isEmpty()) {
+                try {
+                    log.info("Removing an item from the cart...");
+                    visibleRemoveButtons.get(0).click();
+
+                    // המתנה קצרצרה לריענון ה-DOM הדינמי לאחר מחיקת פריט
+                    delayForMobileDomRefresh();
+                } catch (Exception e) {
+                    log.warn("Failed to click remove button, refreshing list. Message: {}", e.getMessage());
                 }
+                // עדכון רשימת הכפתורים שנותרו על המסך
+                visibleRemoveButtons = driver.findElements(AppiumBy.accessibilityId("test-REMOVE"));
             }
 
-            try {
-                driver.findElement(AppiumBy.androidUIAutomator(
-                        "new UiScrollable(new UiSelector().scrollable(true)).scrollForward()"
-                ));
-            } catch (Exception e) {
-                canScrollMore = false;
+            // 3. אחרי שניקינו את כל מה שגלוי, ננסה לגלול קצת למטה כדי לראות אם יש עוד פריטים
+            log.info("No more visible remove buttons, attempting to scroll down for hidden items...");
+            boolean didScroll = scrollDownUIAutomator();
+
+            // אם הגלילה נכשלה (הגענו לסוף המסך) ואין יותר כפתורי REMOVE, אפשר לסיים את הלולאה
+            if (!didScroll && driver.findElements(AppiumBy.accessibilityId("test-REMOVE")).isEmpty()) {
+                log.info("Reached the bottom of the cart screen.");
+                keepChecking = false;
             }
         }
 
-        boolean isCartEmpty = driver.findElements(AppiumBy.accessibilityId("remove item")).isEmpty();
+        // 4. וולידציה סופית: מוודאים שהעגלה אכן ריקה לחלוטין
+        boolean isCartEmpty = driver.findElements(AppiumBy.accessibilityId("test-REMOVE")).isEmpty();
         log.info("All items removed successfully: {}", isCartEmpty);
 
         return isCartEmpty;
     }
 
+    /**
+     * מתודת עזר לביצוע גלילה חכמה באנדרואיד שמחזירה האם הגלילה פיזית הצליחה או הגיעה לסוף
+     */
+    private boolean scrollDownUIAutomator() {
+        try {
+            // שימוש ב-UiScrollable בצורה נכונה שמחזירה ערך בוליאני למערכת
+            String scrollCommand = "new UiScrollable(new UiSelector().scrollable(true)).scrollForward()";
+            Object result = driver.executeScript("mobile: androiduiAutomator", Map.of("expression", scrollCommand));
+            return result instanceof Boolean && (Boolean) result;
+        } catch (Exception e) {
+            return false;
+        }
+    }
     public int getTotalNumberOfItems() {
         try {
             String totalText = totalNumberLabel.getText();
@@ -244,5 +296,14 @@ public class CartPage extends BasePage {
         }
 
         return totalCalculatedCartPrice;
+    }
+
+    public int countNumberOfProductElementsInCart() {
+        try {
+            return products.size();
+        } catch (Exception e) {
+            log.error("Cant count number of products in cart");
+            return 0;
+        }
     }
 }
