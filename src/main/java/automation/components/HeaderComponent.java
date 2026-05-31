@@ -43,6 +43,9 @@ public class HeaderComponent extends BaseComponent {
     @AndroidFindBy(uiAutomator = "new UiSelector().text(\"Cancel\")")
     private WebElement cancelButton;
 
+    @AndroidFindBy(accessibility = "test-Toggle")
+    private WebElement toggle;
+
     @Inject
     public HeaderComponent(AppiumDriver driver) {
         super(driver);
@@ -114,5 +117,33 @@ public class HeaderComponent extends BaseComponent {
 
     public boolean clickOnCancelButton() {
         return click(cancelButton);
+    }
+
+    public boolean clickOnToggle() {
+        return click(toggle);
+    }
+
+    public boolean isToggleButtonEnabled() {
+        return isEnabled(toggle);
+    }
+
+    public boolean isButtonEnabled(String status, WebElement element) {
+        if (status.equalsIgnoreCase("Enabled")) {
+            return isEnabled(element);
+        } else {
+            return !isEnabled(element);
+        }
+    }
+
+    public boolean isCartButtonEnabled(String status) {
+        return isButtonEnabled(status, cartButton);
+    }
+
+    public boolean isMenuButtonEnabled(String status) {
+        return isButtonEnabled(status, menuButton);
+    }
+
+    public boolean isToggleButtonEnabled(String status) {
+        return isButtonEnabled(status, toggle);
     }
 }

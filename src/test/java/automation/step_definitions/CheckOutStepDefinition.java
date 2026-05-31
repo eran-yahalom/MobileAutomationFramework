@@ -20,19 +20,21 @@ public class CheckOutStepDefinition {
 
     Faker faker = new Faker();
 
-    private final Provider<CheckoutPage> checkoutPageProvider;
+    private final Provider<CheckoutInformationPage> checkoutPageProvider;
     private final Provider<PaymentMethodPage> paymentMethodPageProvider;
     private final Provider<CheckOutCompletePage> checkOutCompletePageProvider;
     private final Provider<ReviewYourOrderPage> reviewYourOrderPageProvider;
     private final Provider<CheckOutOverViewPage> checkOutOverViewPageProvider;
+    private final Provider<CartPage> cartPageProvider;
 
     @Inject
-    public CheckOutStepDefinition(Provider<CheckoutPage> checkoutPageProvider, Provider<PaymentMethodPage> paymentMethodPageProvider, Provider<CheckOutCompletePage> checkOutCompletePageProvider, Provider<ReviewYourOrderPage> reviewYourOrderPageProvider, Provider<CheckOutOverViewPage> checkOutOverViewPageProvider) {
+    public CheckOutStepDefinition(Provider<CheckoutInformationPage> checkoutPageProvider, Provider<PaymentMethodPage> paymentMethodPageProvider, Provider<CheckOutCompletePage> checkOutCompletePageProvider, Provider<ReviewYourOrderPage> reviewYourOrderPageProvider, Provider<CheckOutOverViewPage> checkOutOverViewPageProvider, Provider<CartPage> cartPageProvider) {
         this.checkoutPageProvider = checkoutPageProvider;
         this.paymentMethodPageProvider = paymentMethodPageProvider;
         this.checkOutCompletePageProvider = checkOutCompletePageProvider;
         this.reviewYourOrderPageProvider = reviewYourOrderPageProvider;
         this.checkOutOverViewPageProvider = checkOutOverViewPageProvider;
+        this.cartPageProvider = cartPageProvider;
     }
 
     @And("user fills in the checkout:information page details")
@@ -172,6 +174,11 @@ public class CheckOutStepDefinition {
                 "Failed to click on continue button");
     }
 
+    @And("user clicks on cart page continue shopping button")
+    public void userClicksOnTheContinueShoppingButton() {
+        Assert.assertTrue(cartPageProvider.get().clickOnContinueShoppingButton(),
+                "Failed to click on continue shopping button");
+    }
 
 }
 

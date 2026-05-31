@@ -2,10 +2,7 @@ package automation.step_definitions;
 
 import automation.components.HeaderComponent;
 import automation.components.MenuComponent;
-import automation.pages.CartPage;
-import automation.pages.LoginPage;
-import automation.pages.ProductPage;
-import automation.pages.ProductsPage;
+import automation.pages.*;
 import automation.utils.ScenarioContext;
 import automation.utils.Utils;
 import com.google.inject.Inject;
@@ -27,15 +24,23 @@ public class ProductsStepDefinition {
     private final Provider<ProductsPage> productsPageProvider;
     private final Provider<ProductPage> productPageProvider;
     private final Provider<CartPage> cartPageProvider;
+    private final Provider<TogglePage> togglePageProvider;
+    private final Provider<CheckOutOverViewPage> checkOutOverViewPageProvider;
+    private final Provider<CheckoutInformationPage> checkoutInformationPageProvider;
+
 
     @Inject
-    public ProductsStepDefinition(Provider<LoginPage> loginPageProvider, Provider<HeaderComponent> headerComponentProvider, Provider<MenuComponent> menuComponentProvider, Provider<ProductsPage> productsPageProvider, Provider<ProductPage> productPageProvider, Provider<CartPage> cartPageProvider) {
+    public ProductsStepDefinition(Provider<LoginPage> loginPageProvider, Provider<HeaderComponent> headerComponentProvider, Provider<MenuComponent> menuComponentProvider, Provider<ProductsPage> productsPageProvider, Provider<ProductPage> productPageProvider, Provider<CartPage> cartPageProvider, Provider<TogglePage> togglePageProvider, Provider<CheckOutOverViewPage> checkOutOverViewPageProvider, Provider<CheckoutInformationPage> checkoutInformationPageProvider) {
         this.loginPageProvider = loginPageProvider;
         this.headerComponentProvider = headerComponentProvider;
         this.menuComponentProvider = menuComponentProvider;
         this.productsPageProvider = productsPageProvider;
         this.productPageProvider = productPageProvider;
         this.cartPageProvider = cartPageProvider;
+        this.togglePageProvider = togglePageProvider;
+        this.checkOutOverViewPageProvider = checkOutOverViewPageProvider;
+
+        this.checkoutInformationPageProvider = checkoutInformationPageProvider;
     }
 
     @And("user selects product {string} from the products list")
@@ -65,9 +70,10 @@ public class ProductsStepDefinition {
 
     @And("user counts number of items in the cart page")
     public void userCountsNumberOfItemsInTheCartPage() {
-        int totalCartItemCount = cartPageProvider.get().getTotalNumberOfItems();
+        int totalCartItemCount = cartPageProvider.get().countAllCartProducts();
         ScenarioContext.save("expectedCartItemCount", totalCartItemCount);
     }
+
 
     @And("user counts number of items in product page")
     public void userCountsNumberOfItemsInProductPage() {
@@ -97,10 +103,11 @@ public class ProductsStepDefinition {
         Assert.assertEquals(cartItemsCount, BadgeCount, "Number of items in cart page does not match the cart badge count");
     }
 
+    @And("number of items in ca")
+
     @And("product {string} should be present in the cart")
     public void productShouldBePresentInTheCart(String productName) {
-        int expectedCount = ScenarioContext.get("expectedCartItemCount", Integer.class);
-        Assert.assertTrue(cartPageProvider.get().isProductInCart(productName, expectedCount),
+        Assert.assertTrue(cartPageProvider.get().isProductInCart(productName),
                 "Product " + productName + " is not present in the cart");
     }
 
@@ -185,16 +192,31 @@ public class ProductsStepDefinition {
 
     @And("calculate the total price of all products in the cart")
     public void calculateTheTotalPriceOfAllProductsInTheCartAndVerifyItDoesNotExceed() {
-        int currentCount = ScenarioContext.get("expectedCartItemCount", Integer.class);
-        double totalPrice = cartPageProvider.get().calculateTotalCartPrice(currentCount);
+        //  int currentCount = ScenarioContext.get("expectedCartItemCount", Integer.class);
+        Double totalPrice = checkOutOverViewPageProvider.get().getTotalCartPriceWithScroll();
         ScenarioContext.save("expectedTotalPrice", totalPrice);
+    }
+
+    @And("checkout:information total matches cart total")
+    public void checkoutOverViewTotalMatchesCartTotal() {
+        Double cartTotal = ScenarioContext.get("expectedTotalPrice", Double.class);
+        String pageTotal = checkOutOverViewPageProvider.get().getItemTotal();
+        Assert.assertEquals(cartTotal.toString(), pageTotal);
+    }
+
+    @And("checkout:information total price contains tax")
+    public void checkoutOverViewTotalContainsTax() {
+        String totalPrice = checkOutOverViewPageProvider.get().getTotalPrice();
+        //  Double itemTotal = ScenarioContext.get("expectedTotalPrice", Double.class);
+        Double total = checkOutOverViewPageProvider.get().getTotalPriceWithTax();
+        Assert.assertEquals(total.toString(), totalPrice, "Total price got tax");
     }
 
     @Then("cart total price matches the expected total price")
     public void cartTotalPriceMatchesTheExpectedTotalPrice() {
         double expectedTotalPrice = ScenarioContext.get("expectedTotalPrice", Double.class);
-        double actualTotalPrice = cartPageProvider.get().getTotalPrice();
-        Assert.assertEquals(actualTotalPrice, expectedTotalPrice, "Cart total price does not match the expected total price");
+        double actualTotalPrice = checkOutOverViewPageProvider.get().getTotalCartPriceWithScroll();
+        Assert.assertEquals(actualTotalPrice, expectedTotalPrice, "Total price got taz in it");
     }
 
     @And("user decrease number of items in product page by {int}")
@@ -237,15 +259,71 @@ public class ProductsStepDefinition {
         Assert.assertEquals(numberOfItemsInCartBadge, count, "Cart badge don't match the actual item count ");
     }
 
-    @Then("user {string} the product to the cart from product page")
+    @Then("user performs {string} action for product on product page")
     public void userAddOrRemovesTheProductToTheCart(String action) {
         Assert.assertTrue(productPageProvider.get().doCartAction(action),
                 "Failed to add product to cart");
     }
 
-    @Then("user {string} product to cart from products page")
+    @Then("user performs {string} action for product on products page")
     public void userAddOrRemoveFromProductsPage(String action) {
         Assert.assertTrue(productsPageProvider.get().doProductsAction(action),
                 "Failed to add/remove product from product page to cart");
+    }
+
+    @And("user clicks on the toggle icon")
+    public void clickOnToggle() {
+        Assert.assertTrue(headerComponentProvider.get().clickOnToggle(), "Click on toggle was not successful");
+    }
+
+    @Then("user adds product {string} from toggle page to cart")
+    public void addProductFromToggleToCart(String productName) {
+        Assert.assertTrue(togglePageProvider.get().clickOnAddProductToCart(productName, 0), "Cant add product from toggle to cart");
+    }
+
+    @Then("user adds product {string} from products page to cart")
+    public void addProductFromProductsPageToCart(String productName) {
+        Assert.assertTrue(togglePageProvider.get().clickOnAddProductToCart(productName, 1), "Cant add product from toggle to cart");
+    }
+
+    @Then("user removes product {string} from toggle page to cart")
+    public void removeProductFromToggleToCart(String productName) {
+        Assert.assertTrue(togglePageProvider.get().clickOnRemoveProductFromCart(productName), "Cant add product from toggle to cart");
+    }
+
+    @And("user sees the toggle page")
+    public void userSeesTogglePage() {
+        Assert.assertTrue(togglePageProvider.get().isFirstPlusButtonDisplayed(), "Cant see toggle page");
+    }
+
+    @Then("toggle button is disabled")
+    public void toggleIsDisabled() {
+        Assert.assertFalse(headerComponentProvider.get().isToggleButtonEnabled(), "Toggle button is enabled");
+    }
+
+    @And("cart button is {string}")
+    public void getCardButtonStatus(String status) {
+        Assert.assertTrue(headerComponentProvider.get().isCartButtonEnabled(status), "Cart button status is not correct");
+    }
+
+    @And("menu button is {string}")
+    public void getMenuButtonStatus(String status) {
+        Assert.assertTrue(headerComponentProvider.get().isMenuButtonEnabled(status), "Menu button status is not correct");
+    }
+
+    @And("toggle button is {string}")
+    public void getToggleButtonStatus(String status) {
+        Assert.assertTrue(headerComponentProvider.get().isToggleButtonEnabled(status), "Toggle button status is not correct");
+    }
+
+    @Then("number of items in cart should be {int}")
+    public void numberOfItemsInCartShouldBe(int count) {
+        int countElements = ScenarioContext.get("expectedCartItemCount", Integer.class).intValue();
+        Assert.assertEquals(count, countElements, "Number of elements in cart do not match number of added elements");
+    }
+
+    @And("click on checkout:information cancel button")
+    public void clickOnCancelButton() {
+        Assert.assertTrue(checkoutInformationPageProvider.get().clickOnCancelButton());
     }
 }

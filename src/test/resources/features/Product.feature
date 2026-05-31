@@ -17,8 +17,8 @@ Feature: product page tests
 
   Scenario: user removes item from cart successfully
     When user selects product "Sauce Labs Bike Light" from the products list
-    And user "add" the product to the cart from product page
-    And user "remove" the product to the cart from product page
+    And user performs "add" action for product on product page
+    And user performs "remove" action for product on product page
     And user counts the number of items in the cart badge
     Then number of items in cart badge should be "0"
 

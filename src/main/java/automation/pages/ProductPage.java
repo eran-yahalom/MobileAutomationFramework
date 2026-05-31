@@ -2,11 +2,16 @@ package automation.pages;
 
 import automation.utils.Utils;
 import com.google.inject.Inject;
+import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import lombok.extern.log4j.Log4j2;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
 import java.util.List;
 
 @Log4j2
@@ -68,9 +73,32 @@ public class ProductPage extends BasePage {
     }
 
     public boolean addToCart() {
-        scrollToText("ADD TO CART");
-        delayForMobileDomRefresh();
-        return click(addToCartButton);
+        int maxAttempts = 6;
+        By targetButtonLocator = AppiumBy.accessibilityId("test-ADD TO CART");
+        By footerLocator = AppiumBy.xpath("//android.widget.TextView[contains(@text, 'Sauce Labs. All Rights Reserved.')]");
+
+        for (int i = 0; i < maxAttempts; i++) {
+            // 1. בדיקה האם הכפתור קיים וגלוי כרגע על המסך
+            List<WebElement> buttons = driver.findElements(targetButtonLocator);
+            if (!buttons.isEmpty() && buttons.get(0).isDisplayed()) {
+                log.info("Add To Cart button found on screen after {} scrolls.", i);
+                return click(buttons.get(0)); // לחיצה על האלמנט שמצאנו באופן דינמי
+            }
+
+            // 2. הגנה: אם הגענו לסוף העמוד (Footer) והכפתור לא שם, אין טעם להמשיך
+            if (!driver.findElements(footerLocator).isEmpty() && driver.findElement(footerLocator).isDisplayed()) {
+                log.error("Reached the bottom of the page but Add To Cart button was not found.");
+                break;
+            }
+
+            // 3. הכפתור לא גלוי? גוללים מעט למטה כדי לרענן את ה-DOM ולהביא אותו
+            log.info("Button not visible yet, scrolling down... (Attempt {}/{})", i + 1, maxAttempts);
+            Utils.scrollDownALittle(driver);
+            Utils.delayForMobileDomRefresh();
+        }
+
+        log.error("Failed to find or click the Add To Cart button.");
+        return false;
     }
 
     public boolean doCartAction(String action) {

@@ -88,4 +88,8 @@ public class ProductsPage extends BasePage {
             return click(removeButtons.getFirst());
         }
     }
+
+    public boolean isFirstAddToCartButtonDisplayed() {
+        return isDisplayed(addToCartButton);
+    }
 }

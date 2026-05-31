@@ -9,24 +9,28 @@
     </listeners>
 
     <test name="Emulator 5554 Tests">
-        <parameter name="xmlUdid" value="emulator-5554" />
-        <parameter name="xmlSystemPort" value="8200" />
+        <parameter name="xmlUdid" value="emulator-5554"/>
+        <parameter name="xmlSystemPort" value="8200"/>
         <classes>
-<!--            <class name="automation.launchers.GeneralLauncher"/>-->
             <class name="automation.launchers.CheckOutLauncher"/>
-<!--            <class name="automation.launchers.GeoLocationsLauncher"/>-->
+            <class name="automation.launchers.NavigationLauncher"/>
+            <class name="automation.launchers.GeoLocationsLauncher"/>
+            <class name="automation.launchers.LoginLauncher"/>
+            <class name="automation.launchers.ProductsLauncher"/>
+
+
 
 
         </classes>
     </test>
 
-<!--    <test name="Emulator 5556 Tests">-->
-<!--        <parameter name="xmlUdid" value="emulator-5556" />-->
-<!--        <parameter name="xmlSystemPort" value="8201" />-->
-<!--        <classes>-->
-<!--            <class name="automation.launchers.DrawingLauncher"/>-->
-<!--            <class name="automation.launchers.ProductsLauncher"/>-->
-<!--        </classes>-->
-<!--    </test>-->
+    <!--    <test name="Emulator 5556 Tests">-->
+    <!--        <parameter name="xmlUdid" value="emulator-5556" />-->
+    <!--        <parameter name="xmlSystemPort" value="8201" />-->
+    <!--        <classes>-->
+    <!--            <class name="automation.launchers.DrawingLauncher"/>-->
+    <!--            <class name="automation.launchers.ProductsLauncher"/>-->
+    <!--        </classes>-->
+    <!--    </test>-->
 
 </suite>

@@ -4,21 +4,155 @@ Feature: Products page
   Background:
     Given user is successfully logged in
 
-  Scenario: User deletes product from the cart
-    When user selects product "Sauce Labs Bike Light" from the products list
-    And user adds the product to the cart
-    And user clicks on cart icon
-    And user removes all items from the cart
-    Then user verifies that cart is empty
+#  Scenario: User deletes product from the cart
+#    When user selects product "Sauce Labs Bike Light" from the products list
+#    And user adds the product to the cart
+#    And user clicks on cart icon
+#    And user removes all items from the cart
+#    Then user verifies that cart is empty
+#
+#  Scenario: add product to cart from products page
+#    When user performs "add" action for product on products page
+#    And user counts the number of items in the cart badge
+#    Then number of items in cart badge should be "1"
+#
+#  Scenario: remove product to cart from products page
+#    When user performs "add" action for product on products page
+#    When user performs "remove" action for product on products page
+#    And user counts the number of items in the cart badge
+#    Then number of items in cart badge should be "0"
+#
+#  Scenario: Add product to cart via toggle
+#    When user clicks on the toggle icon
+#    And user adds product "Test.allTheThings() T-Shirt (Red)" from toggle page to cart
+#    And user counts the number of items in the cart badge
+#    Then number of items in cart badge should be "1"
+#
+#  Scenario: Remove product to cart via toggle
+#    When user clicks on the toggle icon
+#   And user adds product "Test.allTheThings() T-Shirt (Red)" from toggle page to cart
+#   And user removes product "Test.allTheThings() T-Shirt (Red)" from toggle page to cart
+#    And user counts the number of items in the cart badge
+#    Then  number of items in cart badge should be "0"
+#
+#  Scenario Outline: sorted products by price
+#    When user clicks on sort button
+#    And user sort products by "<sortOption>"
+#     Then user gets all the products prices and verifies that they are sorted by "<sortOption>"
+#
+#    Examples:
+#      | sortOption          |
+#      | Price (low to high) |
+#      | Price (high to low) |
+#
+#  Scenario Outline: sorted products by name
+#    When user clicks on sort button
+#    And user sort products by "<sortOption>"
+#    Then user gets all the products names and verifies that they are sorted by "<sortOption>"
+#
+#    Examples:
+#      | sortOption         |
+#      | name (low to high) |
+#      | name (high to low) |
 
+#  Scenario Outline: sorted products by name
+#    When user clicks on sort button
+#    And user sort products by "<sortOption>"
+#    And user clicks on the toggle icon
+#    Then user gets all the products names and verifies that they are sorted by "<sortOption>"
+#
+#    Examples:
+#      | sortOption         |
+#      | name (low to high) |
+#      | name (high to low) |
 
+ # Scenario Outline: sorted products by name
+#    When user clicks on sort button
+#    And user sort products by "<sortOption>"
+#    And user clicks on the toggle icon
+#    Then user gets all the products names and verifies that they are sorted by "<sortOption>"
+#
+ #   Examples:
+#      | sortOption          |
+#      | Price (low to high) |
+#      | Price (high to low) |
+
+#  Scenario: Toggle icon works as expected
+#    When user clicks on the toggle icon
+#    And user sees the toggle page
+#    And user clicks on the toggle icon
+#    Then user is in the products page
+
+#  Scenario: cart,menu and toggle are enabled when entering app
+#    Given cart button is "enabled"
+#    And menu button is "enabled"
+#    And toggle button is "enabled"
+#
+#  Scenario: cart,menu and toggle are disabled when opening the sort button
+#    When user clicks on sort button
+#    Then cart button is "disabled"
+#    And menu button is "disabled"
+#    And toggle button is "disabled"
+
+#  Scenario: Product is added successfully to the cart
+#    When user selects product "Sauce Labs Onesie" from the products list
+#    And user adds the product to the cart
+#    And user clicks on cart icon
+#    Then product "Sauce Labs Onesie" should be present in the cart
 
 #  Scenario: User added to cart product from products page
 #    When user selects product "Sauce Labs Backpack" from the products list
 #    And user adds the product to the cart
 #    And user clicks on cart icon
 #    And user counts number of items in the cart page
-#    Then number of items in cart matches the cart total count
+#    Then number of items in cart should be 1
+
+#  Scenario: add product from products page and count them in cart
+#    And user adds product "Test.allTheThings() T-Shirt (Red)" from products page to cart
+#    And user clicks on cart icon
+#    And user counts number of items in the cart page
+#    Then number of items in cart should be 1
+
+#  Scenario: add products from products page and count them in cart
+#    When user adds product "Sauce Labs Backpack" from products page to cart
+#    And user adds product "Test.allTheThings() T-Shirt (Red)" from products page to cart
+#    And user clicks on cart icon
+#    And user counts number of items in the cart page
+#    Then number of items in cart should be 2
+
+
+#  Scenario: cart items total price matches checkout overview page total price
+#    When user adds product "Sauce Labs Backpack" from products page to cart
+#    And user adds product "Test.allTheThings() T-Shirt (Red)" from products page to cart
+#    And user clicks on cart icon
+#    And user clicks on proceed to checkout button
+#    And user fills in the checkout:information page details
+#    And user click on checkout:information continue button
+#    And calculate the total price of all products in the cart
+#    Then checkout:information total matches cart total
+
+#  Scenario: checkout:information total price contains tax
+#    When user adds product "Sauce Labs Backpack" from products page to cart
+#    And user adds product "Test.allTheThings() T-Shirt (Red)" from products page to cart
+#    And user clicks on cart icon
+#    And user clicks on proceed to checkout button
+#    And user fills in the checkout:information page details
+#    And user click on checkout:information continue button
+#    And calculate the total price of all products in the cart
+#    Then checkout:information total price contains tax
+
+
+
+
+
+
+
+
+
+
+
+  
+
 
 #  Scenario: Product is added successfully to the cart
 #    When user selects product "Sauce Labs Onesie" from the products list

@@ -29,10 +29,19 @@ public class CartPage extends BasePage {
     private WebElement totalPriceLabel;
 
     @AndroidFindBy(accessibility = "test-CHECKOUT")
-    private WebElement proceedToCheckoutButton;
+    private WebElement checkOutButton;
 
     @AndroidFindBy(accessibility = "Go Shopping button")
     private WebElement goShoppingButton;
+
+    @AndroidFindBy(accessibility = "test-Amount")
+    private List<WebElement> itemsNumber;
+
+    @AndroidFindBy(accessibility = "test-CONTINUE SHOPPING")
+    private WebElement continueShoppingButton;
+
+    @AndroidFindBy(xpath = "//android.view.ViewGroup[@content-desc=\"test-Description\"]/android.widget.TextView[1]")
+    private List<WebElement> productsNames;
 
     @Inject
     public CartPage(AppiumDriver driver) {
@@ -188,6 +197,7 @@ public class CartPage extends BasePage {
             return false;
         }
     }
+
     public int getTotalNumberOfItems() {
         try {
             String totalText = totalNumberLabel.getText();
@@ -212,15 +222,16 @@ public class CartPage extends BasePage {
 
     public boolean clickProceedToCheckout() {
         try {
-            return click(proceedToCheckoutButton);
+            scrollToText("CHECKOUT");
+            return click(checkOutButton);
         } catch (Exception e) {
             log.info("Failed to click on Proceed To Checkout button: {}", e.getMessage());
             return false;
         }
     }
 
-    public boolean isProductInCart(String productName, int numberOfItems) {
-        return Utils.isProductInCart(driver, productName, numberOfItems);
+    public boolean isProductInCart(String productName) {
+        return Utils.isRequestedProductInCart(driver, productName, AppiumBy.xpath("//android.view.ViewGroup[@content-desc=\"test-Description\"]/android.widget.TextView[1]"));
     }
 
     public int countCartItemsWithExactScroll(int numberOfItems) {
@@ -305,5 +316,13 @@ public class CartPage extends BasePage {
             log.error("Cant count number of products in cart");
             return 0;
         }
+    }
+
+    public int countAllCartProducts() {
+        return Utils.sumAllProductQuantitiesWithScroll(driver);
+    }
+
+    public boolean clickOnContinueShoppingButton() {
+        return click(continueShoppingButton);
     }
 }

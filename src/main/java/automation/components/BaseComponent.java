@@ -50,4 +50,13 @@ public class BaseComponent {
             return "";
         }
     }
+
+    public boolean isEnabled(WebElement element) {
+        try {
+            return wait.until(ExpectedConditions.visibilityOf(element)).isEnabled();
+        } catch (Exception e) {
+            log.error("Element not visible: {}", e.getMessage());
+            return false;
+        }
+    }
 }

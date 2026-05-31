@@ -7,7 +7,7 @@ import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.WebElement;
 
 @Log4j2
-public class CheckoutPage extends BasePage {
+public class CheckoutInformationPage extends BasePage {
 
     @AndroidFindBy(accessibility = "test-First Name")
     private WebElement firstName;
@@ -40,7 +40,7 @@ public class CheckoutPage extends BasePage {
     private WebElement cancelButton;
 
     @Inject
-    public CheckoutPage(AppiumDriver driver) {
+    public CheckoutInformationPage(AppiumDriver driver) {
         super(driver);
     }
 
@@ -109,6 +109,7 @@ public class CheckoutPage extends BasePage {
     }
 
     public boolean clickOnCancelButton() {
+        scrollToText("CANCEL");
         return click(cancelButton);
     }
 }
